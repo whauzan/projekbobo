@@ -57,7 +57,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
 
       if (token.role && session.user) {
-        console.log("token.role", token.role);
         session.user.role = token.role as Role;
         // session.user.role = token.role;
       }
