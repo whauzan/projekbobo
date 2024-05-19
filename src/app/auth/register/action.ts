@@ -3,7 +3,9 @@
 import bcryptjs from "bcryptjs";
 
 import { db } from "@/lib/db";
+import { generateVerificationToken } from "@/lib/db/tokens";
 import { getUserByEmail } from "@/lib/db/user";
+import { sendVerificationEmail } from "@/lib/mail";
 
 import { Register, RegisterSchema } from "@/schema/AuthSchema";
 
@@ -42,6 +44,11 @@ export const register = async (values: Register) => {
     });
 
     // TODO: Send email verification
+    const verificationToken = await generateVerificationToken(validatedEmail);
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token,
+    );
 
     return {
       success: "Registered successfully!",

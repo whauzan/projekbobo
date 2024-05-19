@@ -2,16 +2,18 @@ import React from "react";
 
 import AuthCardWrapper from "@/app/auth/_components/AuthCardWrapper";
 
-const ErrorCard = () => {
+import ResetForm from "./ResetForm";
+
+const ResetCard = () => {
   return (
     <AuthCardWrapper
-      headerLabel="Oops! Something went wrong!"
-      backButtonHref="/auth/login"
+      headerLabel="Forgot your password?"
       backButtonLabel="Back to login"
+      backButtonHref="/auth/login"
     >
-      <div className="flex items-center justify-center">ErrorPage</div>
+      <ResetForm />
     </AuthCardWrapper>
   );
 };
 
-export default ErrorCard;
+export default ResetCard;

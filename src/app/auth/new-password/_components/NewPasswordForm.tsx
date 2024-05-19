@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -19,63 +18,42 @@ import {
 } from "@/components/ui/Form";
 import { Input } from "@/components/ui/Input";
 
-import { Login, LoginSchema } from "@/schema/AuthSchema";
+import { NewPassword, NewPasswordSchema } from "@/schema/AuthSchema";
 
-import { login } from "../action";
+import { newPassword } from "../action";
 
-const LoginForm = () => {
+const NewPasswordForm = () => {
   const searchParams = useSearchParams();
-  const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider"
-      : "";
+  const token = searchParams.get("token") ?? undefined;
 
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
 
-  const form = useForm<Login>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<NewPassword>({
+    resolver: zodResolver(NewPasswordSchema),
     defaultValues: {
-      email: "",
       password: "",
     },
   });
 
-  function onSubmit(values: Login) {
+  function onSubmit(values: NewPassword) {
     setError("");
     setSuccess("");
 
+    console.log(values);
+
     startTransition(() => {
-      login(values).then((response) => {
+      newPassword(values, token).then((response) => {
         setError(response?.error);
         setSuccess(response?.success);
       });
     });
   }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    disabled={isPending}
-                    placeholder="test@mail.com"
-                    type="email"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="password"
@@ -86,31 +64,23 @@ const LoginForm = () => {
                   <Input
                     {...field}
                     disabled={isPending}
-                    placeholder="*******"
+                    placeholder="******"
                     type="password"
                   />
                 </FormControl>
-                <Button
-                  size="sm"
-                  variant="link"
-                  asChild
-                  className="px-0 font-normal"
-                >
-                  <Link href="/auth/reset">Forgot password?</Link>
-                </Button>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        <FormError message={error || urlError} />
+        <FormError message={error} />
         <FormSuccess message={success} />
         <Button className="w-full" disabled={isPending} type="submit">
-          Log In
+          Reset password
         </Button>
       </form>
     </Form>
   );
 };
 
-export default LoginForm;
+export default NewPasswordForm;

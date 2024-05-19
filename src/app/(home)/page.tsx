@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/Button";
 
 import { auth, signOut } from "@/auth";
 
+import ButtonTest from "./_components/ButtonTest";
+
 export default async function Home() {
   const session = await auth();
 
@@ -19,6 +21,7 @@ export default async function Home() {
           <Button type="submit">LogOut</Button>
         </form>
       )}
+      <ButtonTest />
     </main>
   );
 }
